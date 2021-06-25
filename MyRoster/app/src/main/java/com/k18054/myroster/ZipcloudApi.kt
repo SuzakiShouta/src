@@ -1,10 +1,7 @@
 package com.k18054.myroster
 
-import android.os.Bundle
 import android.os.Handler
-import android.telecom.Call
 import android.util.Log
-import androidx.appcompat.app.AppCompatActivity
 import retrofit2.Call
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -25,4 +22,33 @@ interface AddressService {
 }
 
 class ZipcloudApi {
+
+    val zipcode = 7830060
+
+    val retrofit = Retrofit.Builder()
+        .baseUrl("https://zipcloud.ibsnet.co.jp/api/")
+        .addConverterFactory(GsonConverterFactory.create()).build()
+//           ↑↑↑↑↑↑↑↑
+//             Gsonのファクトリーメソッド必須！
+    val handler = Handler()
+
+    fun getAddress(zipCode: Int) {
+        thread { // Retrofitはメインスレッドで処理できない
+            try {
+                Log.d("MainActivity", "try")
+                val service:AddressService = retrofit.create(AddressService::class.java)
+                val address = service.fetchAddress(zipcode).execute().body() ?: throw IllegalStateException("bodyがnullだよ！")
+
+                handler.post(Runnable {
+                    // メインスレッドで処理
+                    // UIはここで
+                    println(address)
+                })
+
+            } catch (e: Exception) {
+                Log.d("mopi", "debug $e")
+            }
+        }
+    }
+
 }
