@@ -2,6 +2,7 @@ package com.k18054.myroster
 
 import android.graphics.Color
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -61,6 +62,7 @@ class RosterEditFragment : Fragment() {
         println((activity as? MainActivity)?.setFabVisible(View.INVISIBLE))
         binding.save.setOnClickListener { saveRoster(it) }
         binding.delete.setOnClickListener { deleteRoster(it) }
+        binding.postalCode.setOnClickListener { setAddress(it) }
     }
 
     private fun saveRoster (view: View) {
@@ -104,6 +106,17 @@ class RosterEditFragment : Fragment() {
                 ?.deleteFromRealm()
         }
         makeSnackbar(view, "削除しました")
+    }
+
+    private fun setAddress (view: View) {
+        val Api = ZipcloudApi()
+        Api.getAddress("${binding.postalCodeEdit.text}".toInt())
+        Api.setTextApi { address ->
+            address?.let {
+                Log.d("MainActivity",address.toString())
+                binding.addressEdit.setText(address)
+            }
+        }
     }
 
     override fun onDestroyView() {

@@ -46,8 +46,7 @@ class FirstFragment : Fragment() {
 
         adapter.setOnItemClickListener { id ->
             id?.let {
-                val action =
-                        FirstFragmentDirections.actionToRosterEditFragment(it)
+                val action = FirstFragmentDirections.actionToRosterEditFragment(it)
                 findNavController().navigate(action)
             }
         }
