@@ -7,6 +7,9 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import io.realm.OrderedRealmCollection
 import io.realm.RealmRecyclerViewAdapter
+import java.time.Year
+import java.util.*
+import java.util.Calendar.*
 
 class RosterAdapter(data: OrderedRealmCollection<Roster>) : RealmRecyclerViewAdapter<Roster, RosterAdapter.ViewHolder>(data, true){
 
@@ -36,8 +39,14 @@ class RosterAdapter(data: OrderedRealmCollection<Roster>) : RealmRecyclerViewAda
 
     override fun onBindViewHolder(holder: RosterAdapter.ViewHolder, position: Int) {
         val roster: Roster? = getItem(position)
-        holder.firstName.text = roster?.firstName
-        holder.lastName.text = roster?.lastName
+        val calender: Calendar = Calendar.getInstance().apply {
+            time = roster?.birthday
+        }
+        holder.firstName.text = roster?.firstName.plus(roster?.lastName)
+        //理由がわからないがMONTHが-1されている。
+        holder.lastName.text = calender.get(YEAR).toString().plus("/")
+                .plus(calender.get(MONTH)+1).plus("/")
+                .plus(calender.get(DAY_OF_MONTH))
         holder.itemView.setOnClickListener {
             listener?.invoke(roster?.id)
         }

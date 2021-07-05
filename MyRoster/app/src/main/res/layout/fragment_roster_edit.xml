@@ -73,16 +73,6 @@
         app:layout_constraintTop_toBottomOf="@+id/postalCodeEdit" />
 
     <Button
-        android:id="@+id/birthdayButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:text="日付選択"
-        app:layout_constraintBottom_toBottomOf="@+id/birthdayEdit"
-        app:layout_constraintStart_toEndOf="@+id/birthdayEdit"
-        app:layout_constraintTop_toTopOf="@+id/birthdayEdit" />
-
-    <Button
         android:id="@+id/postalCode"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

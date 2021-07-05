@@ -1,9 +1,9 @@
 <resources>
-    <string name="app_name">My Roster</string>
+    <string name="app_name">名簿アプリ</string>
     <string name="action_settings">Settings</string>
     <!-- Strings used for fragments for navigation -->
     <string name="first_fragment_label">一覧表示</string>
-    <string name="second_fragment_label">Second Fragment</string>
+    <string name="second_fragment_label">誕生日カレンダー</string>
     <string name="next">Next</string>
     <string name="previous">Previous</string>
 
@@ -12,4 +12,6 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="roster_edit_text">名簿編集</string>
+    <string name="action_to_secondFragment_button">誕生日カレンダー</string>
+    <string name="action_to_firstFragment_button">一覧表示</string>
 </resources>
