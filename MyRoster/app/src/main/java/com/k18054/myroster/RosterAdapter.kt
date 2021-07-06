@@ -1,5 +1,6 @@
 package com.k18054.myroster
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -42,6 +43,7 @@ class RosterAdapter(data: OrderedRealmCollection<Roster>) : RealmRecyclerViewAda
         val calender: Calendar = Calendar.getInstance().apply {
             time = roster?.birthday
         }
+        Log.d("adapter",roster?.birthday.toString().plus(",").plus(calender.get(MONTH)))
         holder.firstName.text = roster?.firstName.plus(roster?.lastName)
         //理由がわからないがMONTHが-1されている。
         holder.lastName.text = calender.get(YEAR).toString().plus("/")

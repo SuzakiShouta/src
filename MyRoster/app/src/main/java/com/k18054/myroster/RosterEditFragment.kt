@@ -60,42 +60,48 @@ class RosterEditFragment : Fragment() {
         //val aaa: MainActivity = activity as MainActivityと同じ
         (activity as? MainActivity)?.setFabVisible(View.INVISIBLE)
         println((activity as? MainActivity)?.setFabVisible(View.INVISIBLE))
+        Log.d("edit",binding.postalCodeEdit.text.toString().plus(",").plus(binding.postalCodeEdit.text.toString() == ""))
         binding.save.setOnClickListener { saveRoster(it) }
         binding.delete.setOnClickListener { deleteRoster(it) }
         binding.postalCode.setOnClickListener { setAddress(it) }
     }
 
     private fun saveRoster (view: View) {
-        when (args.rosterId) {
-            // 新規登録
-            -1L -> {
-                realm.executeTransaction { db: Realm ->
-                    val maxId = db.where<Roster>().max("id")
-                    val nextId = (maxId?.toLong() ?: 0L) + 1L
-                    val roster = db.createObject<Roster>(nextId)
-                    val birthday = "${binding.birthdayEdit.text}".toDate()
-                    if (birthday != null) roster.birthday = birthday
-                    roster.firstName = binding.firstNameEdit.text.toString()
-                    roster.lastName = binding.lastNameEdit.text.toString()
-                    roster.postalCode = "${binding.postalCodeEdit.text}".toInt()
-                    roster.address = binding.addressEdit.text.toString()
+        if (canSave()) {
+            Log.d("edit",binding.postalCodeEdit.text.toString())
+            when (args.rosterId) {
+                // 新規登録
+                -1L -> {
+                    realm.executeTransaction { db: Realm ->
+                        val maxId = db.where<Roster>().max("id")
+                        val nextId = (maxId?.toLong() ?: 0L) + 1L
+                        val roster = db.createObject<Roster>(nextId)
+                        val birthday = "${binding.birthdayEdit.text}".toDate()
+                        if (birthday != null) roster.birthday = birthday
+                        roster.firstName = binding.firstNameEdit.text.toString()
+                        roster.lastName = binding.lastNameEdit.text.toString()
+                        roster.postalCode = "${binding.postalCodeEdit.text}".toInt()
+                        roster.address = binding.addressEdit.text.toString()
+                    }
+                    makeSnackbar(view, "登録しました")
                 }
-                makeSnackbar(view, "登録しました")
-            }
-            // 更新
-            else -> {
-                realm.executeTransaction { db: Realm ->
-                    val roster = db.where<Roster>()
-                        .equalTo("id", args.rosterId).findFirst()
-                    val birthday = ("${binding.birthdayEdit.text}").toDate()
-                    if (birthday != null) roster?.birthday = birthday
-                    roster?.firstName = binding.firstNameEdit.text.toString()
-                    roster?.lastName = binding.lastNameEdit.text.toString()
-                    roster?.postalCode = "${binding.postalCodeEdit.text}".toInt()
-                    roster?.address = binding.addressEdit.text.toString()
+                // 更新
+                else -> {
+                    realm.executeTransaction { db: Realm ->
+                        val roster = db.where<Roster>()
+                                .equalTo("id", args.rosterId).findFirst()
+                        val birthday = ("${binding.birthdayEdit.text}").toDate()
+                        if (birthday != null) roster?.birthday = birthday
+                        roster?.firstName = binding.firstNameEdit.text.toString()
+                        roster?.lastName = binding.lastNameEdit.text.toString()
+                        roster?.postalCode = "${binding.postalCodeEdit.text}".toInt()
+                        roster?.address = binding.addressEdit.text.toString()
+                    }
+                    makeSnackbar(view, "更新しました")
                 }
-                makeSnackbar(view,"更新しました")
             }
+        } else {
+            makeSnackbar(view, "未記入があります")
         }
     }
 
@@ -117,6 +123,18 @@ class RosterEditFragment : Fragment() {
                 binding.addressEdit.setText(address)
             }
         }
+    }
+
+    private fun canSave (): Boolean {
+        Log.d("edit",binding.postalCodeEdit.text.toString())
+        if (binding.firstNameEdit.text.toString() != "" &&
+                binding.lastNameEdit.text.toString() != "" &&
+                binding.birthdayEdit.text.toString() != "" &&
+                binding.postalCodeEdit.text.toString() != "" &&
+                binding.addressEdit.text.toString() != "") {
+            return true
+        }
+        return false
     }
 
     override fun onDestroyView() {
